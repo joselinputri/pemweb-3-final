@@ -1,10 +1,10 @@
 import { Response } from "express";
 
 export const HttpResponse = {
-  ok: (res: Response, message: string, data?: any) =>
+  ok: (res: Response, message: string, data?: unknown) =>
     res.status(200).json({ success: true, message, data }),
 
-  created: (res: Response, message: string, data?: any) =>
+  created: (res: Response, message: string, data?: unknown) =>
     res.status(201).json({ success: true, message, data }),
 
   badRequest: (res: Response, message: string) =>

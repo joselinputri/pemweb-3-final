@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import authRoutes from "./auth/auth.routes";
 import bookRoutes from "./routes/book.routes";
 import genreRoutes from "./routes/genre.routes";
+import transactionRoutes from "./routes/transaction.route";  // ✅ PASTIKAN INI ADA
 
 dotenv.config();
 
@@ -30,6 +31,7 @@ app.get("/health-check", (_req: Request, res: Response) => {
 app.use("/auth", authRoutes);
 app.use("/books", bookRoutes);
 app.use("/genre", genreRoutes);
+app.use("/transactions", transactionRoutes);  // ✅ PASTIKAN INI ADA
 
 // 404 Handler
 app.use((_req: Request, res: Response) => {
@@ -43,6 +45,13 @@ app.use((_req: Request, res: Response) => {
 app.listen(PORT, () => {
   console.log(`🚀 Server running at http://localhost:${PORT}`);
   console.log(`📚 IT Literature Shop - Backend API`);
+  console.log(`\n📋 Available Routes:`);
+  console.log(`   - POST   /auth/register`);
+  console.log(`   - POST   /auth/login`);
+  console.log(`   - GET    /auth/me`);
+  console.log(`   - POST   /transactions  ✅`);  // ✅ PASTIKAN INI MUNCUL
+  console.log(`   - GET    /transactions  ✅`);
+  console.log(`   - GET    /transactions/statistics  ✅`);
 });
 
 export default app;
