@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String   @id @default(uuid()) @db.Uuid
+  username   String?  @db.Text
+  email      String   @unique @db.Text
+  password   String   @db.Text
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  orders Order[]
+
+  @@map("users")
+}
+
+model Genre {
+  id         String    @id @default(uuid()) @db.Uuid
+  name       String    @unique @db.Text
+  created_at DateTime  @default(now()) @db.Timestamp(6)
+  updated_at DateTime  @updatedAt @db.Timestamp(6)
+  deleted_at DateTime? @db.Timestamp(6)  // ✅ ADD THIS LINE
+
+  books Book[]
+
+  @@map("genres")
+}
+
+model Book {
+  id               String      @id @default(uuid()) @db.Uuid
+  title            String      @unique @db.Text
+  writer           String      @db.Text
+  publisher        String      @db.Text
+  publication_year Int?
+  description      String?     @db.Text
+  price            Int
+  stock_quantity   Int
+  genre_id         String      @db.Uuid
+  created_at       DateTime    @default(now()) @db.Timestamp(6)
+  updated_at       DateTime    @updatedAt @db.Timestamp(6)
+  deleted_at       DateTime?   @db.Timestamp(6)  // ✅ ADD THIS LINE
+
+  genre       Genre        @relation(fields: [genre_id], references: [id])
+  order_items OrderItem[]
+
+  @@map("books")
+}
+
+model Order {
+  id         String   @id @default(uuid()) @db.Uuid
+  user_id    String   @db.Uuid
+  totalPrice Int?
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  user  User        @relation(fields: [user_id], references: [id])
+  items OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id         String   @id @default(uuid()) @db.Uuid
+  quantity   Int
+  order_id   String   @db.Uuid
+  book_id    String   @db.Uuid
+  created_at DateTime @default(now()) @db.Timestamp(6)
+  updated_at DateTime @updatedAt @db.Timestamp(6)
+
+  order Order @relation(fields: [order_id], references: [id])
+  book  Book  @relation(fields: [book_id], references: [id])
+
+  @@map("order_items")
+}
